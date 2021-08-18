@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block content %}
+
+    <div class="container">
+        
+        <h3>Home Page</h3>
+
+        <small class="text-danger">
+            Adding order-record into <b>DB</b> using API, and the API is getting called using a 
+            <b>JS function in this page</b>. <br/>
+            For posting data to the backend using API, <b>Axios</b> is used in the JS function 
+            (<b>"createOrder()"</b>).
+        </small>
+    
+        <div class="row pt-3 mt-5 mb-5 pt-sm-0">
+            
+            {% for p in pizzas %}
+            <div class="col-lg-3 col-md-4 col-sm-6 mb-grid-gutter my-4">
+                <div class="card product-card shadow border pb-2">
+                    <a href="" class="d-block" data-toggle="modal">
+                        <img src="{{ p.image.url }}" alt="Pizza" class="card-img-top">
+                    </a>
+                    <div class="card-body pt-1 pb-2">
+                        <h4 class="card-title pt-3">{{ p.name }}</h4>
+                        <small>Pizza Id: {{ p.id }}</small>
+    
+                        <div class="d-flex align-item-center justify-content-between mt-4">
+                            <div class="product-price d-flex align-item-center">
+                                <span class="text-accent mt-2"> ৳ {{ p.price }}</span>
+                            </div>
+                            <button class="btn btn-primary btn-md" type="button" data-toggle="toast" data-target="#cart-toast"
+                                    onclick="createOrder( {{ p.id }} )">
+                                <span class="px-2">
+                                    <span class="mr-2 fw-bold">+</span>
+                                    <i class="fas fa-shopping-cart ml-2"></i>
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+    
+        </div>
+
+
+        <div class="my-5 py-5">
+            <h3 class="text-center mb-4" id="orderHeading">All Orders List</h3>
+
+            <table class="table table-hover table-striped mb-0">
+                <thead>
+                    <tr>
+                        <th scope="col">Order ID#</th>
+                        <th scope="col">Pizza</th>
+                        <th scope="col">Date Purchased</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Total</th>
+                        <th scope="col" 
+                            class="text-center">View Detail</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for o in orders %}
+                    <tr>
+                        <th scope="row"
+                            class="py-4">{{ o.order_id }}</th>
+                        <td class="py-4">{{ o.pizza }}</td>
+                        <td class="py-4">{{ o.date }}</td>
+                        <td class="py-4">
+                            <span class="badge bg-info m-0 py-2 statusCol" id="statusCol_{{o.order_id}}">
+                                {{ o.status }}
+                            </span>
+                        </td>
+                        <td class="py-4">{{ o.amount }}</td>
+                        <td class="text-center py-4">
+                            <a href="{% url 'homeApplication:order' o.order_id %}"
+                                class="btn btn-primary btn-sm">
+                                View
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+{% endblock %}
+
+
+<!-- Custom JS -->
+{% block js %} 
+
+    <!-- Axios CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js" integrity="sha512-bZS47S7sPOxkjU/4Bt0zrhEtWx0y0CRkhEp8IckzK+ltifIIE9EMIMTuT/mEzoIMewUINruDBIR/jJnbguonqQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <!-- Create order-record using axios-post-method -->
+    <script src="{% static 'js/index_api.js' %}"></script>
+
+{% endblock %}

@@ -1,0 +1,146 @@
+OS Environment Setup:
+    Install Python 3.9.6
+    Install Redis Server in the machine.
+
+Technologies:
+    Django,
+    Django Channels,
+    Redis,
+    HTML-CSS-JS-JSON,
+    SImple API without the DRF (to create new pizza-orders)
+
+-----------------------------------------------------------------------------------------------------------------------------------
+
+Pre-Project Setup: 
+    Setup the django-boilerplate for the which will be able to operate CRUD-operation from the django-admin-panel.
+    Add two models: Pizza, Order.
+    Override the 'Pizza' model's 'save' method in order to resize pizza-image before uploading.
+    Override the 'Order' model's 'save' method in order to generate random-string while creating an order-record.
+
+-----------------------------------------------------------------------------------------------------------------------------------
+
+01. Establish a basic-project setup, 
+    > where in one page, the all the pizzas and orders are shown accordingly in a card and table template
+    > on the other page, a specific order is shown in the card-template which is redirect from the previous-order-view btn.
+
+NB: Populate some records to view the UI efficiently.
+
+02. Install 'channels' from pip-repository.
+        pip install channels
+
+03. Install 'channels-redis' from pip-repository. It'll be able to communicate with the redis-server in the local machine.
+        pip install channels-redis
+
+NB: create a 'requirements.txt' file outside of the project's working-directory.
+
+
+******** "settings.py" File Modification ********
+
+>>>>>>>> See the "Establish Wbesocket Connection in "order.html" page" stage to execute this step. 
+>> DON'T EXECUTE STEP-4 UNTIL YOU REACH TO THE ("Establish Wbesocket Connection in "order.html" page") STAGE
+04. Install the 'channels' inside the 'settings.py' file's 'INSTALLED_APPS' section.
+        INSTALLED_APPS = [
+            'channels',   # to avoid any inconvenience
+            'django.contrib.admin',
+            ......................,
+            'home',
+        ]
+
+    Modify the default 'wsgi-server' with the 'asgi-server' in the 'settings.py' file. It'll enable the asynchronous-capability 
+    in this django project.
+        ASGI_APPLICATION = 'pizzaProj.asgi.application'
+
+    Allow this django-project to use the redis-server.
+    Set up the channel layer in your Django 'settings.py' file like so:
+        CHANNEL_LAYERS = {
+            "default": {
+                "BACKEND": "channels_redis.core.RedisChannelLayer",
+                "CONFIG": {
+                    "hosts": [("127.0.0.1", 6379)],
+                },
+            },
+        }
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+>>> MEDIA-CONFIGURATION TO VIEW ALL THE IMAGES OF PIZZAS IN THE INDEX.HTML PAGE.
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+
+
+******** Create an API View / Use Axios to send POST-req to the backend-server ********
+Inter-Related Files: 
+    >>> "pizzaProj/home/api/views.py" file.
+    >>> "pizzaProj/static/js/index_api.js" file.
+
+
+Whenever this api-view/ api-method gets called, it will create an order record in the db.
+The Axios sends that request to the backend "order_pizza" api-method in JSON format. The 'username' can also be extracted from that 'request'.
+
+Example:
+    print(request.user)
+        [Output] admin
+    print(json.loads(request.body))
+        [Output] {'id': 4}
+
+The 'request.id' would be to extract the pizza-info from the 'pizza' table.
+Then creat a order-model-instance & save() that instance within the api-method.
+Lastly make a jsonResponse so that someone using Postman can view a relevant response after hitting this api with suitable data.
+The jsonResponse-key-value-pair "status:booleanVal" will be used to reload the frontend-page.
+Use axios to make HTTP requests.
+
+
+05. In the "pizzaProj/static/js/index_api.js" file, if the jsonResponse-status is True, it'll reload the page, in this case it's the "pizzaProj/templates/home/index.html".
+
+NB:
+    Use the browser/ Postman to see the jsonResponse of this API.
+
+
+******** Create 'order.html' page to display specific order-record-data ********
+
+06. Inside the 'index.html' page, create a button-type anchor-tag to redirect a user to the order-page of an individual order.
+
+06. In the "pizzaProj/home/views.py" create an order-view to redirect to the "order.html" page. This view should accept an order-id as string in the view-param.
+
+07. Set the url-routing of this view. Remeber to make the url suitable to pass an order_id as string to the view ("order").
+
+08. In the 'order.html' page, the specific order will first be queried from the db using the order_id and then be dumped in the html-page, these could be extracted using the django-variables.
+
+
+******** Establish Wbesocket Connection in "order.html" page ********
+
+09. Initially, in the 'settings.py' file, make the django-project to listen to the "asgi-server" instead of the "wsgi-server"
+
+10. See the step-4 ("settings.py" File Modification" stage) to complete the required-modifications which will enable django-channels to be used in this project.
+
+11. Make a boilerplate Consumer class in the "consumer.py" file, which will establish the Websocket-consumer/ channels. Initially, this consumer-class will consist of two methods ('connect', 'disconnect').
+
+12. Make routing of this consumer inside the "pizzaProj/home/routing.py" file.
+
+13. Now, inside the "pizzaProj/pizzaProj/asgi.py" file, make the 'application' callable-object to listen to the both HTTP-requests and WS-reqs (Websocket) using "ProtocolTypeRouter". To the websocket-reqs to consumer, the 'AuthMiddlewareStack' & 'URLRouter' is used.
+
+14. The 'connect' method of the consumer ("OrderProgress") will call the "get_order_detail" staticmethod. This staticmethod exist inside the "pizzaProj/home/models.py" file under the Order-model-class.
+    This staticmethod will make query of specific order-detail using order-id inside the order-model-class. So an order-id is required to be passed while calling the staticmethod. 
+    So inside the consumer, we can extract the order_id, from the 'websocket_urlpatterns' as room_name.
+    The 'websocket_urlpatterns' will get the order_id from the frontend-websocket.
+    A specific-order is being queried using HTTP-req, when the user clicks the 'view' button of any specific-order from the order-list inside the 'index.html' page.
+    Simultaneously, when the 'order.html' page loads, a websocket-connects gets created with the backend's consumer "OrderProgress".
+    In the frontend-websocket, it grabs the 'order_id' which is dumped by the django-variable in the 'order.html' page, and sends back to the backend's consumer "OrderProgress".
+    Basically, the 'order.html' page is making both the HTTP-req & WS-req to the backend-server.
+    By the HTTP-req, we are getting the django-variables of that specific order, and displaying as a bootstarp-card.
+    And by the WS-req, we are making the progress-bar (class="progress-bar") and the badge-span (class="badge" id="status") html-elems real-time responsive.
+
+So until noew, the HTTP-req is made and the websocker connection is established in the 'order.html' page. Through the WS-req, the progress-bar and the status-badge will be changed.
+
+NB:
+    Use 'Websocketking.com' to view the connection-response of this websocket.
+
+
+******** Make a signal to receive order-updation changes and sends back to the websocket-consumer ********
+
+15. Inside the "pizzaProj/home/models.py" file, make a "post_save" signal-method to listen to any updation in order-table and sends back to the websocket-consumer-class's 'order_status' method/ channel as a payload.
+
+16. The payload which is sent in the "order_status" channel of the consumer "OrderProgress" is extracted with the 'receive' method within the consumer. Then it will be sent to the channel-group of that consumer.
+
+17. The frontend-Websocket gets the response immediately because of the "onmessage" method of the "Websocket" instance.
+    So from this stage, the progress-bar and the "badge-span" html tag will become real-time responsive, means whenever there is any status-updation-action of an pizza-order from the backend/ frontend, the 'order.html' file's progress-bar & the 'badge-span' HTML tags will change simultanesly.
+
