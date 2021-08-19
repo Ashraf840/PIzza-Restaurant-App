@@ -1,0 +1,24 @@
+After cloning this django project to another machine:
+
+
+01. Create a python environment in the working directory. It's better to user python version 3.9.6 for creating the environment. Activate the python environment.
+		python3.9 -m venv env
+		source env/bin/activate
+
+02. Create a db instance into the new machine, using 'makemigrations'
+		cd pizzaProj/
+		python manage.py makemigrations
+		python manage.py migrate
+
+NB:
+	Since a new db (db.sqlite3) is created, we need to create the superuser in order to use this project's django-admin-panel.
+		python manage.py createsuperuser
+	username: xyz
+	email: xyz@gmail.com
+	password: *******
+
+03. Now activate the redis-server in another terminal tab.
+	redis-server
+
+04. Now run the django-server.
+		python manage.py runserver 8080

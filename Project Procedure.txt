@@ -144,3 +144,15 @@ NB:
 17. The frontend-Websocket gets the response immediately because of the "onmessage" method of the "Websocket" instance.
     So from this stage, the progress-bar and the "badge-span" html tag will become real-time responsive, means whenever there is any status-updation-action of an pizza-order from the backend/ frontend, the 'order.html' file's progress-bar & the 'badge-span' HTML tags will change simultanesly.
 
+
+NB:
+    Make git pull request to merge the remote GitHub repo with this local repo.
+
+
+******** Pagination feature in the 'index.html' page ********
+
+18. Import 'Pagination' inside the 'pizzaProj/home/views.py' file. In the 'index' view, Add the 'order' query to the Paginator method & specify the page-num to 10.
+    From now on, the 'index' page will display 10 orders in the table-list initially.
+    Now inside the 'index.html' page, add pagination feautre/ newxt-prev buttons, so that the user can click and navigate to the prev/ next order-list-query.
+
+19. 
