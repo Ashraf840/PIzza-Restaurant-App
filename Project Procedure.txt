@@ -1,5 +1,5 @@
 OS Environment Setup:
-    Install Python 3.9.6
+    Install Python 3.9.6 in the machine.
     Install Redis Server in the machine.
 
 Technologies:
