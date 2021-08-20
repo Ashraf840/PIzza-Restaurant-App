@@ -6,24 +6,37 @@ from django.core.paginator import Paginator
 
 
 def index(request):
+    # Pizza Query
     pizza = Pizza.objects.all()
-    # order = Order.objects.all()
-    # order = Order.objects.order_by('-id')[:10]    # display the latest 15 orders
-    order = Order.objects.order_by('-id')
+
+    total_pizza_num = len(pizza)
+
+    pizza_paginator = Paginator(pizza, 4)
+    pizza_page = request.GET.get('page')
+    paginated_pizza_list_query = pizza_paginator.get_page(pizza_page)
+
+
+    # Order Query
+    order = Order.objects.order_by('-id')   # display the latest orders
 
     total_order_num = len(order)
 
     order_paginator = Paginator(order, 5)
-    page = request.GET.get('page')
-    paginated_order_list_query = order_paginator.get_page(page)
+    order_page = request.GET.get('page')
+    paginated_order_list_query = order_paginator.get_page(order_page)
 
     context = {
         'title': 'Pizza App: Homepage',
-        'pizzas': pizza,
-        'total_order_num': total_order_num,
+
+        'pizzas': paginated_pizza_list_query,
+        'total_pizza_num': total_pizza_num,
+
         'orders': paginated_order_list_query,
+        'total_order_num': total_order_num,
     }
     return render(request, 'home/index.html', context)
+
+# An API View is created inside this "pizzaProj/home/api/views.py" file.
 
 
 def order(request, order_id):
@@ -34,11 +47,30 @@ def order(request, order_id):
         return redirect('homeApplication:homepage')
 
     context = {
-        'title': 'Pizza App: Order Page',
+        'title': 'Pizza App: Order Status Page',
         'order': order,
     }
     return render(request, 'home/order.html', context)
 
 
 
-# An API View is created inside this "pizzaProj/home/api/views.py" file.
+
+# Oder-List page
+def order_list(request):
+    # Order Query
+    order = Order.objects.order_by('-id')   # display the latest orders
+
+    total_order_num = len(order)
+
+    order_paginator = Paginator(order, 5)
+    order_page = request.GET.get('page')
+    paginated_order_list_query = order_paginator.get_page(order_page)
+
+    context = {
+        'title': 'Orders List',
+
+        'orders': paginated_order_list_query,
+        'total_order_num': total_order_num,
+    }
+
+    return render(request, 'home/order_list.html', context)
