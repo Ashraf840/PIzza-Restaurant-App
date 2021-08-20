@@ -3,20 +3,38 @@
 {% load static %}
 
 
+<!-- Custom Stylesheet -->
+{% block stylesheet %} 
+    <link rel="stylesheet" href="{% static 'css/home/index_pizza_arrow_sign.css' %}">
+{% endblock %}
+
+
+<!-- Main Body -->
 {% block content %}
 
     <div class="container">
         
-        <h3>Home Page</h3>
+        <div class="row d-flex justify-content-between">
+            <div class="col-2 py-3">
+                <h3>Pizza List</h3>
+            </div>
+            <div class="col-2 py-3 d-flex justify-content-end">
+                <a href="{% url 'homeApplication:order_list' %}" class="text-white btn btn-lg btn-dark" 
+                    style="min-width: 7rem; text-decoration: none;">
+                    View Orders
+                </a>
+            </div>
+        </div>
 
-        <small class="text-danger">
+        <!-- Important Notes -->
+        <!-- <small class="text-danger mb-5">
             Adding order-record into <b>DB</b> using API, and the API is getting called using a 
             <b>JS function in this page</b>. <br/>
             For posting data to the backend using API, <b>Axios</b> is used in the JS function 
             (<b>"createOrder()"</b>).
-        </small>
-    
-        <div class="row pt-3 mt-5 mb-5 pt-sm-0">
+        </small> -->
+
+        <div class="row mt-5 pt-sm-0">
             
             {% for p in pizzas %}
             <div class="col-lg-3 col-md-4 col-sm-6 mb-grid-gutter my-4">
@@ -46,126 +64,29 @@
             {% endfor %}
     
         </div>
+        
+        <!-- Pizza list arrow navigation -->
+        <div class="row py-3 d-flex justify-content-center align-items-center">
+            <!-- Left Arrow Sign -->
+            {% if pizzas.has_other_pages %}
+                <div class="col-1 mx-2 d-flex justify-content-center align-items-center">
+                    {% if pizzas.has_previous %}
+                        <i class="arrow left"
+                            onclick="location.href='?page={{ pizzas.previous_page_number }}'"></i>
+                    {% else %}
+                        <i class="arrow left disabled"></i>
+                    {% endif %}
+                </div>
 
-
-        <div class="my-5 py-5">
-            <h3 class="text-center mb-4" id="orderHeading">All Orders List</h3>
-
-            <table class="table table-hover table-striped mb-0">
-                <thead>
-                    <tr>
-                        <th scope="col">Sl no.</th>
-                        <th scope="col">Order ID#</th>
-                        <th scope="col">Pizza</th>
-                        <th scope="col">Date Purchased</th>
-                        <th scope="col">Status</th>
-                        <th scope="col">Total</th>
-                        <th scope="col" 
-                            class="text-center">View Detail</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for o in orders %}
-                    <tr>
-                        <th scope="row"
-                            class="py-4">{{ forloop.counter }}</th>
-                        <th scope="row"
-                            class="py-4">{{ o.order_id }}</th>
-                        <td class="py-4">{{ o.pizza }}</td>
-                        <td class="py-4">{{ o.date }}</td>
-                        <td class="py-4">
-                            <span class="badge bg-info m-0 py-2 statusCol" id="statusCol_{{o.order_id}}">
-                                {{ o.status }}
-                            </span>
-                        </td>
-                        <td class="py-4">{{ o.amount }}</td>
-                        <td class="text-center py-4">
-                            <a href="{% url 'homeApplication:order' o.order_id %}"
-                                class="btn btn-primary btn-sm">
-                                View
-                            </a>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <td colspan="7" class="text-center">
-                            Total Orders: <b> {{ total_order_num }} </b>
-                        </td>
-                    </tr>
-                </tfoot>
-            </table>
-
-            <!-- Pagination -->
-            {% if orders.has_other_pages %}
-                <!-- Lorem ipsum dolor sit amet. -->
-
-                <nav aria-label="Page navigation" class="mt-3">
-                    <ul class="pagination">
-                        <!-- Previous sign symbol -->
-                        {% if orders.has_previous %}
-                            <li class="page-item">
-                                <a href="?page={{ orders.previous_page_number }}" 
-                                    class="page-link"
-                                    style="text-decoration: none;">
-                                    &laquo; &nbsp;&nbsp;
-                                </a>
-                            </li>
-                        {% else %}
-                            <li class="page-item disabled">
-                                <a href="#" 
-                                    class="page-link text-muted">
-                                    <span>
-                                        &laquo; &nbsp;&nbsp;
-                                    </span>
-                                </a>
-                            </li>
-                        {% endif %}
-
-                        <!-- All page numbers -->
-                        {% for pg in orders.paginator.page_range %}
-                            {% if orders.number == pg %}
-                                <li class="page-item active">
-                                    <a href="#" class="page-link">
-                                        <span style="font-weight: bold;">
-                                            {{ pg }} &nbsp;&nbsp;
-                                        </span>
-                                    </a>
-                                </li>
-                            {% else %}
-                                <li class="page-item">
-                                    <a href="?page={{ pg }}" class="page-link">
-                                        <span style="font-weight: bold;">
-                                            {{ pg }} &nbsp;&nbsp;
-                                        </span>
-                                    </a>
-                                </li>
-                            {% endif %}
-                        {% endfor %}
-                        
-                        <!-- Next sign symbol -->
-                        {% if orders.has_next %}
-                            <li class="page-item">
-                                <a href="?page={{ orders.next_page_number }}" 
-                                    class="page-link"
-                                    style="text-decoration: none;">
-                                    &raquo; &nbsp;&nbsp;
-                                </a>
-                            </li>
-                        {% else %}
-                            <li class="page-item disabled">
-                                <a href="#" 
-                                    class="page-link text-muted">
-                                    <span>
-                                        &raquo; &nbsp;&nbsp;
-                                    </span>
-                                </a>
-                            </li>
-                        {% endif %}
-                    </ul>
-                </nav>
-
+                <!-- Right Arrow Sign -->
+                <div class="col-1 mx-2 d-flex justify-content-center align-items-center">
+                    {% if pizzas.has_next %}
+                        <i class="arrow right"
+                            onclick="location.href='?page={{ pizzas.next_page_number }}'"></i>
+                    {% else %}
+                        <i class="arrow right disabled"></i>
+                    {% endif %}
+                </div>
             {% endif %}
         </div>
 
