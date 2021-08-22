@@ -12,7 +12,7 @@ def pizzaList(request):
     context = {
         'title': 'Restaurant Staffs: Pizza List',
 
-        'pizza': pizzas,
+        'pizzas': pizzas,
         'total_pizza_num': total_pizza_num,
     }
     return render(request, 'restaurant_staff/pizza_list.html', context)
