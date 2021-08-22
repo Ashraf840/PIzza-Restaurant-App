@@ -44,10 +44,26 @@ def updatePizza(request, pizza_id):
         form = PizzaForm(request.POST, request.FILES, instance=pizza)   # REQUIRED since an image is also getting uploaded using this form; instance will only update that specific record
         if form.is_valid():
             form.save()
-            return redirect('restaurantStaffApplication:pizzaRecords')    # redirect to the same page
+            return redirect('restaurantStaffApplication:pizzaRecords')    # redirect to the pizza-record page
 
     context = {
-        'title': 'Restaurant Staffs: New Pizza Record',
+        'title': 'Restaurant Staffs: Update Pizza Record',
+        'pizza': pizza,
         'pizzaForm': form,
     }
     return render(request, 'restaurant_staff/update_pizza_record.html', context)
+
+
+# Delete pizza record (for restaurant-staffs)
+def deletePizza(request, pizza_id):
+    pizza = Pizza.objects.filter(pk=pizza_id).first()
+
+    if request.method == 'POST':
+        pizza.delete()
+        return redirect('restaurantStaffApplication:pizzaRecords')    # redirect to the pizza-record page
+
+    context = {
+        'title': 'Restaurant Staffs: Delete Pizza Record',
+        'pizza': pizza,
+    }
+    return render(request, 'restaurant_staff/delete_pizza_record.html', context)

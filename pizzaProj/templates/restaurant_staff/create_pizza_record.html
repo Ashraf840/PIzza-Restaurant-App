@@ -6,7 +6,17 @@
 
     <div class="container">
 
-        <h1 class="my-2">Create New Pizza Record</h1>
+        <div class="row d-flex justify-content-between">
+            <div class="col-7 py-3">
+                <h3>Restaurant Staff Page: Create New Pizza Record</h3>
+            </div>
+            <div class="col-2 py-3 d-flex justify-content-end">
+                <a href="{% url 'restaurantStaffApplication:pizzaRecords' %}" class="text-white btn btn-lg btn-dark" 
+                    style="min-width: 7rem; text-decoration: none;">
+                    Pizza List
+                </a>
+            </div>
+        </div>
 
         <form method="POST" enctype="multipart/form-data"
             class="bg-light p-5"
