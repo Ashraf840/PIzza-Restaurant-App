@@ -32,6 +32,8 @@
                         <th scope="col">Price</th>
                         <th scope="col">Created At</th>
                         <th scope="col">Updated At</th>
+                        <th scope="col" 
+                            class="text-center">View Detail</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -43,12 +45,18 @@
                         <td class="py-4">{{ pizz.price }}</td>
                         <td class="py-4">{{ pizz.created_at }}</td>
                         <td class="py-4">{{ pizz.updated_at }}</td>
+                        <td class="text-center py-4">
+                            <a href="{% url 'restaurantStaffApplication:updatePizzaRecord' pizz.id %}"
+                                class="btn btn-primary btn-sm px-4">
+                                View
+                            </a>
+                        </td>
                     </tr>
                     {% endfor %}
                 </tbody>
                 <tfoot>
                     <tr>
-                        <td colspan="5" class="text-center">
+                        <td colspan="6" class="text-center">
                             Total Orders: <b> {{ total_pizza_num }} </b>
                         </td>
                     </tr>

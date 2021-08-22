@@ -33,3 +33,21 @@ def createPizza(request):
         'pizzaForm': form,
     }
     return render(request, 'restaurant_staff/create_pizza_record.html', context)
+
+
+# Update pizza record (for restaurant-staffs)
+def updatePizza(request, pizza_id):
+    pizza = Pizza.objects.filter(pk=pizza_id).first()
+    form = PizzaForm(instance=pizza)
+
+    if request.method == 'POST':
+        form = PizzaForm(request.POST, request.FILES, instance=pizza)   # REQUIRED since an image is also getting uploaded using this form; instance will only update that specific record
+        if form.is_valid():
+            form.save()
+            return redirect('restaurantStaffApplication:pizzaRecords')    # redirect to the same page
+
+    context = {
+        'title': 'Restaurant Staffs: New Pizza Record',
+        'pizzaForm': form,
+    }
+    return render(request, 'restaurant_staff/update_pizza_record.html', context)

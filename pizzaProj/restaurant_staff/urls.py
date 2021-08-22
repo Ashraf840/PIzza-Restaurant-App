@@ -13,4 +13,5 @@ urlpatterns = [
     # Pizza Record CRUD - Related
     path('pizza/pizza-records/', crud_pizza_record_views.pizzaList, name='pizzaRecords'),
     path('pizza/create-pizza-record/', crud_pizza_record_views.createPizza, name='createPizzaRecord'),
+    path('pizza/update-pizza-record/<str:pizza_id>/', crud_pizza_record_views.updatePizza, name='updatePizzaRecord'),
 ]
