@@ -1,4 +1,3 @@
-from django.core import paginator
 from django.shortcuts import render, redirect
 from django.views.decorators import csrf
 from .models import *

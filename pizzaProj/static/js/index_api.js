@@ -8,6 +8,8 @@ function createOrder(id) {
         // Check the Json-Response status, it True, reload the page
         if (res.data.status) {
             // window.location.reload();
+
+            // Redirecting the user to the order-list page
             var url = "http://127.0.0.1:8080/order_list/"
             window.location.href = url;
         }

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+{% extends 'base.html' %}
+{% load static %}
+
+
+
+{% block content %}
+
+    <h1>Restaurant Staff Page: Order Status Update</h1>
+
+    <div class="container my-5 pt-5">
+        <div class="row">
+            <div class="col d-flex justify-content-center align-items-center">
+                <!-- Order Detail Card -->
+                <div class="card" style="width: 90%;">
+                    <img src="{{ order.pizza.image.url }}" class="card-img-top" alt="pizza-image">
+                    <div class="card-body">
+                        <h5 class="card-title">Order Id: {{ order.order_id }}</h5>
+                        <p class="card-text">Pizza Type: {{ order.pizza }}</p>
+                        <p class="card-text">Username: {{ order.user }}</p>
+                        <p class="card-text">Price: {{ order.amount }}</p>
+                        <p class="card-text">Status: {{ order.status }}</p>
+                        <p class="card-text">Order Date:{{ order.date }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col d-flex justify-content-center align-items-center">
+                <form method="POST" 
+                    class="p-5 container-fluid bg-light border border-ligth">
+                    {% csrf_token %}
+                    <div class="row m-0 p-0">
+                        <div class="col mx-0 my-3 p-0">
+                            <label class="fs-3"> 
+                                {{ orderForm.status.label_tag }} 
+                            </label>
+                        </div>
+                    </div>
+                    <div class="row m-0 p-0">
+                        <div class="col fs-4 m-0 p-0 d-flex align-items-center">
+                            {{ orderForm.status }}
+                        </div>
+                    </div>
+                    <div class="row mt-4">
+                        <div class="col d-flex justify-content-end">
+                            <button type="submit"
+                                class="btn btn-danger">Apply Change</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
