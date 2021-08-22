@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 {% extends 'base.html' %}
-{% load static %}
 
 <!-- Main Body -->
 {% block content %}
@@ -22,7 +21,7 @@
         </div>
 
 
-        <div style="margin: 10rem 0;">
+        <div style="margin: 5rem 0 10rem 0;">
             <h3 class="text-center mb-4" id="orderHeading">All Orders List</h3>
 
             <table class="table table-hover table-striped mb-0">
@@ -61,7 +60,7 @@
                 </tbody>
                 <tfoot>
                     <tr>
-                        <td colspan="7" class="text-center">
+                        <td colspan="6" class="text-center">
                             Total Orders: <b> {{ total_order_num }} </b>
                         </td>
                     </tr>
