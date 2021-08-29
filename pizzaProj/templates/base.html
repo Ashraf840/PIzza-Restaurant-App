@@ -20,12 +20,41 @@
 <body class="d-flex flex-column min-vh-100">
 
     <!-- Header/ Nav-bar -->
-    <header class="navbar navbar-dark bg-dark mb-4 px-3 p-4">
-        <a href="{% url 'homeApplication:homepage' %}" class="text-white" style="min-width: 7rem; text-decoration: none;">
+    <header class="navbar navbar-dark bg-dark mb-4 px-3 p-4 d-flex justify-content-center">
+        <div class="row container-fluid">
+            <div class="col py-2">
+                <a href="{% url 'homeApplication:homepage' %}" class="text-white" style="min-width: 7rem; text-decoration: none;">
+                    <h1> Pizza App </h1>
+                </a>
+            </div>
+            <div class="col d-flex justify-content-center text-white">
+                <h4 class="d-block">
+                    Welcome, {{ user }}!
+                    <!-- <span class="mt-4 bg-secondary d-flex justify-content-center align-items-center">Lorem, ipsum.</span> -->
+                    <span class="badge bg-primary mt-4 d-flex justify-content-center align-items-center"
+                        style="padding: 0.3rem 0; width: 10rem; margin: 0 auto;">
+                        {% if not user.is_staff %}
+                            {% if not user.is_admin %}
+                                {% if not user.is_superuser %}
+                                    Customer
+                                {% endif %}
+                            {% endif %}
+                        {% else %}
+                            Staff
+                        {% endif %}
+                    </span>
+                </h4>
+            </div>
+            <div class="col py-4 d-flex justify-content-end">
+                <a href="{% url 'userAuth:logout' %}" class="btn btn-danger"
+                    style="padding: 0.5rem 1.5rem;">Logout</a>
+            </div>
+        </div>
+        <!-- <a href="{% url 'homeApplication:homepage' %}" class="text-white" style="min-width: 7rem; text-decoration: none;">
             <h1> Pizza App </h1>
         </a>
         <a href="{% url 'userAuth:logout' %}"
-            class="btn btn-danger">Logout</a>
+            class="btn btn-danger">Logout</a> -->
     </header>
     
     <!-- Main Body Content -->
