@@ -1,0 +1,3 @@
+******** Added Custom User Model 'Authentication' ********
+
+1. "has_perm()" and "has_module_perms()" functions stated inside the "CustomUser" class.

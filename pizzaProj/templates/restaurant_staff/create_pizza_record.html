@@ -13,13 +13,13 @@
             <div class="col-2 py-3 d-flex justify-content-end">
                 <a href="{% url 'restaurantStaffApplication:pizzaRecords' %}" class="text-white btn btn-lg btn-dark" 
                     style="min-width: 7rem; text-decoration: none;">
-                    Pizza List
+                    View Pizza List
                 </a>
             </div>
         </div>
 
         <form method="POST" enctype="multipart/form-data"
-            class="bg-light p-5"
+            class="bg-light p-5 border border-warning rounded"
             style="margin: 5rem 0;">
             {% csrf_token %}
             <div class="mb-3">
@@ -30,8 +30,8 @@
                 <label class="form-label">{{ pizzaForm.price.label_tag }}</label>
                 {{ pizzaForm.price }}
             </div>
-            <div class="mb-3 form-check">
-                <label class="form-label">{{ pizzaForm.image.label_tag }}</label>
+            <div style="margin: 2.5rem 0;">
+                <!-- <label class="form-label">{{ pizzaForm.image.label_tag }}</label> -->
                 {{ pizzaForm.image }}
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>
