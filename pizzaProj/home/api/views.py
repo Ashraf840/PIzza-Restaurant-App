@@ -3,22 +3,25 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
 from home.models import *
+from home.decorators import *
 
 
 # API View/ Method (used in the 'indx.html' file's onclick func ('createOrder'))
+# Axios.Post method is used to call this backend api. It's called inside the "templates/home/index.html" file's JS-script ("static/js/index_api.js").
 @csrf_exempt
+@stop_restaurant_staff
 def order_pizza(request):
     # return JsonResponse({ 'testing': 'Success' }) # testing API
 
     try:
-        print(request.user)
-        print(json.loads(request.body))
+        # print(request.user)
+        # print(json.loads(request.body))
 
         # fetching data send from the frontend func ("createOrder")
         user = request.user # fetch user info from 'index.html'
         data = json.loads(request.body) # fetch all the django-vars from 'index.html', especially focuses on 'pizza' information. Converts a JSON-obj to a python-dictionary.
         
-        pizza = Pizza.objects.get(id=data.get('id'))    # extract the specific pizza-obj from db using the onclick 'createOrder({{p.id}})' func existed in 'index.html'
+        pizza = Pizza.objects.get(id=data.get('id'))    # extract the specific pizza-obj from db using the 'pizza.id' onclick 'createOrder({{p.id}})' func existed in 'index.html'
         
         # [ INSERT RECORD TO DB ]
         # Creating an single-record in the 'Order' model-class

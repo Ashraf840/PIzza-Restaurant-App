@@ -15,7 +15,7 @@ admin.site.register(Pizza, PizzaAdmin)
 class OrderAdmin(admin.ModelAdmin):
     list_display = ['order_id', 'pizza', 'user', 'status', 'date', 'amount']
     list_filter = ['status']
-    search_fields = ['order_id', 'pizza', 'user', 'status',]
+    search_fields = ['order_id', 'status']
     list_display_links = ['order_id']
     list_per_page = 15
 

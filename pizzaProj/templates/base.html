@@ -24,12 +24,12 @@
         <a href="{% url 'homeApplication:homepage' %}" class="text-white" style="min-width: 7rem; text-decoration: none;">
             <h1> Pizza App </h1>
         </a>
+        <a href="{% url 'userAuth:logout' %}"
+            class="btn btn-danger">Logout</a>
     </header>
     
     <!-- Main Body Content -->
-    {% block content %}
-
-    {% endblock %}
+    {% block content %} {% endblock %}
 
     <!-- Footer -->
     <footer class="bg-dark shadow footer text-center p-4 mt-auto">

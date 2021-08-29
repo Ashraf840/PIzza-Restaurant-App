@@ -1,5 +1,5 @@
 from django.urls import path, include
-from .views import order_status_update_views, crud_pizza_record_views
+from .views import order_status_update_views, crud_pizza_record_views, views
 
 app_name = 'restaurantStaffApp'
 
@@ -7,6 +7,7 @@ urlpatterns = [
     # For Restaurant Staffs Only
 
     # Order Status Update - Related
+    path('', views.index, name='home_restaurant_staffs'),
     path('order-list/', order_status_update_views.restaurant_order_status_list, name='restaurantBackendOrderStatus'),
     path('order-status-update/<str:order_id>/', order_status_update_views.restaurant_order_status_update, name='orderStatusUpdate'),
 

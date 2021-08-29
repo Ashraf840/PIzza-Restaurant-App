@@ -1,10 +1,13 @@
 from django.shortcuts import render, redirect
 from home.models import *
 from restaurant_staff.forms import *
-
+from django.contrib.auth.decorators import login_required
+from restaurant_staff.decorators import *
 
 
 # Shows all the pizzas (for restaurant-staffs)
+@login_required(login_url='userAuth:login')
+@stop_regular_customer
 def pizzaList(request):
     pizzas = Pizza.objects.all()
     total_pizza_num = len(pizzas)
@@ -19,6 +22,8 @@ def pizzaList(request):
 
 
 # Create new pizza record (for restaurant-staffs)
+@login_required(login_url='userAuth:login')
+@stop_regular_customer
 def createPizza(request):
     form = PizzaForm()
 
@@ -36,6 +41,8 @@ def createPizza(request):
 
 
 # Update pizza record (for restaurant-staffs)
+@login_required(login_url='userAuth:login')
+@stop_regular_customer
 def updatePizza(request, pizza_id):
     pizza = Pizza.objects.filter(pk=pizza_id).first()
     form = PizzaForm(instance=pizza)
@@ -55,6 +62,8 @@ def updatePizza(request, pizza_id):
 
 
 # Delete pizza record (for restaurant-staffs)
+@login_required(login_url='userAuth:login')
+@stop_regular_customer
 def deletePizza(request, pizza_id):
     pizza = Pizza.objects.filter(pk=pizza_id).first()
 

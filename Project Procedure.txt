@@ -151,8 +151,208 @@ NB:
 
 ******** Pagination feature in the 'index.html' page ********
 
-18. Import 'Pagination' inside the 'pizzaProj/home/views.py' file. In the 'index' view, Add the 'order' query to the Paginator method & specify the page-num to 10.
+18. [Order Query Pagination] Import 'Pagination' inside the 'pizzaProj/home/views.py' file. In the 'index' view, Add the 'order' query to the Paginator method & specify the page-num to 10.
     From now on, the 'index' page will display 10 orders in the table-list initially.
-    Now inside the 'index.html' page, add pagination feautre/ newxt-prev buttons, so that the user can click and navigate to the prev/ next order-list-query.
+    Now inside the 'index.html' page, add pagination feautre/ next-prev buttons, so that the user can click and navigate to the prev/ next order-list-query.
+    
+    [Pizza Query Pagination] Afterwards, create the same pagination for the pizza-list which are displays as the card-thumbnails in the "index.html" page.
+    Include css-customized navigation-arrows to navigate through all the pizzas.
 
-19. 
+    [Bug Fix] If two paginated queries exist in the same page, then nav-btn for one paginated-query will also affect other one while navigating.
+    So, now I've moved the paginated-orders query in a separate page and include a btn in the "index.html" page to navigate to that page. Also all the business-logic written for order-query is moved to another view to call the separated order-list page.
+
+
+
+******** Create "restaurant_staff" ap for making staffs' backend operations ********
+
+19. To avoid making restaurant-opeartions by using the django-admin panel, make a separate app ("restaurant_staff") for the restaurant staffs & make separete html-templates folder to generate frontend htmls which will only be displayed to the restaurant staffs.
+    Initially, I've created the "order_stat_list.html" file to display the orders-list dedicated for the restaunt staffs. 
+    Then, I've created the "restaurant_staff/order_stat_updation.html" file to allow the restaurant-staffs to change the status of orders.
+    Same goes for the pizzas to execute the CRUD operations available for only the restaurant-staffs.
+    Thus, there will be "pizza_list.html", "create_pizza_record.html", "update_pizza_record.html", "delete_pizza_record.html" files to excute the CRUD operations for the pizzas.
+
+NB: Right now, everyone can access these pages. 
+    Later, these pages will be separated from the refular customer users of this system from accessing and will only be available for the restaurant-staffs.
+    For this, we need to install authentication feature inside this project. But I'll install the authentication feature using custom-user-model.
+
+
+
+******** Added Custom User Model 'Authentication' ********
+
+20. Create another app ('authentication') in the project's working directory, inside that app's 'models.py' file, create a model-class which will inherit the 'AbstractBaseUse' class.
+    Add the necessary fields for the custom-authentication. Then explicitly define the 'auth-field' and 'required-fields' which are required to be filled as a pre-requisite for registering into the system.
+    Then define "has_perm()" and "has_module_perms()" funcs which will allow user to have custom permissions.
+
+21. Next, create another class ("CustomUserManager") which will manage the user-model class ("CustomUser"). It'll inherit the 'BaseUserManager' class. In this manager class, there will be two methods: "create_user" & "create_super_user".
+    Afterwards, define the base user model manager inside the "CustomUser" model-class.
+
+22. The 'authentication' app is required to be installed inside the "INSTALLED_APPS[]" section in the "settings.py" file. 
+        INSTALLED_APPS = [
+            'channels',
+            '..................',
+            'home',
+            'restaurant_staff',
+            'authentication',
+        ]
+    Then, explicitly define the 'Custom User Auth Model' in the "settings.py" file.
+        AUTH_USER_MODEL = "authentication.CustomUser"
+
+23. [IMPORTANT!] delete the migration file ("0001_initial.py") previously created inside the 'home' app.
+    Delete the django's default developement db ("db.sqlite3"). In case of other dbs (oracle, mysql, postgresql, mongodb), use the sql-cmd to delete the db from the terminal/ GUI.
+
+24. Now run the following cmd to generate a db with new auth-configuration.
+        python manage.py makemigrations
+        python manage.py migrate
+
+25. Create a new superuser from the terminal using the cmd.
+        python manage.py createsuperuser
+Email address: admin@gmail.com
+Company name: Simple Arki
+Company phone: 01917739840
+Password: ***********
+Password (again): ***********
+[Output] Superuser created successfully.
+
+Now, check login with the email & password in the django-admin panel.
+
+26. After the make a UI-customization inside the 'CustomUser' model class by creating a class inside the "pizzaProj/authentication/admin.py" file.
+    But if we want to create another user from the admin-panel's 'CustomUser' model class, then we'll get an error. To avoid such issue, explicitly define 'add_fieldsets=[]' inside the model-admin-class inside the "admin.py" file.
+    'add_fieldsets=[]' isn't a standard modelAdmin attribute, but it'll recover the issue by telling the django's "user-creation-form" to use the fields that are defined inside the 'add_fieldsets' list.
+    Thus, this list is mentioning the fields explicitly which will be used by the "user-creation-form".
+
+
+
+******** Create User Registration Form (Frontend) based on the Custom User Model 'Authentication' ********
+
+NB:
+    This custom-user-auth-model is build by getting helped from one of my another personal django-project naming "User Authentication System".
+
+27. Create "authentication/forms.py" file. There will be "UserCreationForm" & "UserLoginForm".
+    Look carefully, since there are detailed customizations inside those form-classes to make them functional and visually representive.
+
+28. Build the logic for creating new users by using this "pizzaProj/authentication/views.py" file.
+    Create a user-registration page ("pizzaProj/templates/authentication/regForm.html") file.
+        To render the user-creation-form, I've created the 'UserRegistrationForm' class inside the "pizzaProj/authentication/forms.py" file.
+        Logic is build inside the 'pizzaProj/authentication/views.py' file & tested.
+
+    Create a user-login page ("pizzaProj/templates/authentication/loginForm.html") file.
+        To render the user-login-form, I've created the 'UserLoginForm' class inside the "pizzaProj/authentication/forms.py" file.
+        Logic is build inside the 'pizzaProj/authentication/views.py' file & tested.
+        Add a login-page anchor tag button in the registration-page, and vice versa inside the login-page too.
+
+29. Create a logout function in the "pizzaProj/home/views.py" file. Then setup the url of that view & add a logout btn in the nav-bar.
+
+NB: 
+    To render user's first_name/ full_name/ an other field while using the custom-user-model,
+    look inside this atricle from the following link:
+        https://www.caktusgroup.com/blog/2013/08/07/migrating-custom-user-model-django/
+
+30. The related html pages are created respecively inside the 'pizzaProj/templates' directory.
+        "pizzaProj/templates/authentication/auth_base.html",
+        "pizzaProj/templates/authentication/loginForm.html",
+        "pizzaProj/templates/authentication/regForm.html"
+
+NB: Created all the auth-funcs and tested.
+
+31. Made a scope for the regular users to provide their 'first_name', 'last_name', 'gender' info while registering in the system.
+    It's achieved using a 'CustomUser' model.
+
+32. Add the frontend regForm & loginForm for the users. This auth-forms will later be used by both the restaurant-customers & the 
+    restaurant-staffs to access to the ststem.
+
+NB: Tested the frontend auth functionalities.
+
+33. Minor modifications in the 'CustomUser' model for the admin-panel UI. Extend displaying the 'is_staff', 'is_superuser' columns 
+    along with the 'is_active' & 'is_admin' columns in the admin-panel's 'User List' Table-model.
+
+
+
+******** Create DECORATORS to compel access-restrictions into the system ********
+
+34. Assign the "login_required" decorator to the following views, displaying the views-name along with the file-names.
+    (
+        userLogout -> "pizzaProj/authentication/views.py",
+        index -> "pizzaProj/home/views.py",
+        order -> "pizzaProj/home/views.py",
+        order_list -> "pizzaProj/home/views.py",
+        order_pizza -> "pizzaProj/home/api/views.py",   [API View/ Func]
+        restaurant_order_status_list -> "pizzaProj/restaurant_staff/views/order_status_update_views.py",
+        restaurant_order_status_update -> "pizzaProj/restaurant_staff/views/order_status_update_views.py",
+        pizzaList -> "pizzaProj/restaurant_staff/views/crud_pizza_record_views.py",
+        createPizza -> "pizzaProj/restaurant_staff/views/crud_pizza_record_views.py",
+        updatePizza -> "pizzaProj/restaurant_staff/views/crud_pizza_record_views.py",
+        deletePizza -> "pizzaProj/restaurant_staff/views/crud_pizza_record_views.py",
+    ), 
+    impoted from the django's "django.contrib.auth.decorators" library, and redirected to the system-login page using the param ("login_url='userAuth:login'").
+    It'll prevent any unauthenticated-user to access to the system without logging into system.
+
+
+35. Create a custom decorator ('stop_authenticated_users') inside the "pizzaProj/authentication/decorators.py" file.
+    It'll prevent any authenticated-user to access to the login & registration page.
+    Assign this decorator to the following views along with their file-names.
+    (
+        userReg -> "pizzaProj/authentication/views.py",
+        userLogin -> "pizzaProj/authentication/views.py",
+    )
+
+36. Next, create another custom decorator ("stop_restaurant_staff") inside the "pizzaProj/home/decorators.py" file.
+    It'll prevent any restaurant-staffs to access to the pages which are dedicatedly built for the regular customers.
+    Assign this decorator to the following views along with their file-names.
+    (
+        index -> "pizzaProj/home/views.py",
+        order -> "pizzaProj/home/views.py",     [Websocket/ Consumer Enabled]
+        order_list -> "pizzaProj/home/views.py",
+    )
+
+37. Create another customer decorator ("stop_regular_customer") inside the "pizzaProj/restaurant_staff/decorators.py" file.
+    It'll prevent any regular customers to access to the pages which are dedicatedly built for the restaurant-staffs to operate the backend operations instead of accessing the main django-administration panel.
+    Assign this decorator to the following views along with their file-names.
+    (
+        restaurant_order_status_list -> "pizzaProj/restaurant_staff/views/order_status_update_views.py",
+        restaurant_order_status_update -> "pizzaProj/restaurant_staff/views/order_status_update_views.py",
+        pizzaList -> "pizzaProj/restaurant_staff/views/crud_pizza_record_views.py",
+        createPizza -> "pizzaProj/restaurant_staff/views/crud_pizza_record_views.py",
+        updatePizza -> "pizzaProj/restaurant_staff/views/crud_pizza_record_views.py",
+        deletePizza -> "pizzaProj/restaurant_staff/views/crud_pizza_record_views.py",
+    )
+
+38. Build a custom "page_not_found", which will render the "404_error_handling_page" whenever any user will go to any unknown 
+    url within this django project. To render a custom_404_not_found_page, for testing this, we need to make some changes in the "settings.py" file:
+        the DEBUG = False
+        the ALLOWED_HOST = ['*']
+    [TESTED & later changed this above settings to the previous stage.]
+
+Ref:  https://www.youtube.com/watch?v=gsW5gYTNi34
+
+39. Inside the authentication-app, I develop another logic which will automatically redirect the staffs or other superusers to a separate homepage, whereas, the regular customers will be redirected to another homepage.
+    This logic is build inside the "userLogin" view which is inside the "pizzaProj/authentication/views.py" file.
+    [TESTED]
+
+40. Build a separate homepage, which will automatically display to the restaurant-staffs/ admin/ superuser after logged in.
+    In this homepage, the staffs can choose whether to redirect to the order-related page or pizza-related page by clicking on any of the card.
+    This homepage will be displayed by using the "pizzaProj/templates/restaurant_staff/index.html" file.
+
+41. Then, the forms-frontend will be modified to make those forms visually attractive by making changes in the following "forms.py" file.
+    pizzaProj/templates/restaurant_staff/order_stat_updation.html,
+    pizzaProj/templates/restaurant_staff/create_pizza_record.html,
+    pizzaProj/templates/restaurant_staff/update_pizza_record.html
+    File's "forms.py" files are stated below along with their file-names. (
+        "OrderStatusUpdateForm" -> "pizzaProj/restaurant_staff/forms.py",
+        "PizzaForm" -> "pizzaProj/restaurant_staff/forms.py",
+    )
+
+
+Inside the homepage for the restaurant-staffs.
+Got the images of pizza & pizza-delivery from this link:  https://www.clipartmax.com/so/pizza/
+
+
+
+
+
+
+
+
+
+
+
+

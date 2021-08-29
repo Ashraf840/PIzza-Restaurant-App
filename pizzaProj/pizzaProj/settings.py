@@ -25,8 +25,10 @@ SECRET_KEY = 'django-insecure-48%+o9w^)(8)gf-^@z67ak6s%92#*6i$*p%yaukpmn)0)5x_%q
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+# DEBUG = False
 
-ALLOWED_HOSTS = []
+# ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -42,6 +44,7 @@ INSTALLED_APPS = [
     
     'home',
     'restaurant_staff',
+    'authentication',
 ]
 
 MIDDLEWARE = [
@@ -75,6 +78,10 @@ TEMPLATES = [
 # WSGI_APPLICATION = 'pizzaProj.wsgi.application'
 
 ASGI_APPLICATION = 'pizzaProj.asgi.application' # now this django-proj will listen to the "asgi-server" instead of "wsgi-server"
+
+
+# Set Custom User Auth Model
+AUTH_USER_MODEL = "authentication.CustomUser"
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases

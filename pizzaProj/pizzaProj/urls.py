@@ -22,9 +22,14 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include(('home.urls', 'app_name'), namespace='homeApplication')),
     path('restaurant/', include(('restaurant_staff.urls', 'app_name'), namespace='restaurantStaffApplication')),
+    path('authentication/', include(('authentication.urls', 'app_name'), namespace='userAuth')),
 ]
 
 
 # URL Config: Media Files
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+
+# 404 Error Handling
+handler404 = 'home.views.error_404_view'

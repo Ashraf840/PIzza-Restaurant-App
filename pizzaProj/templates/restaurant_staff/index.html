@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+{% extends 'base.html' %}
+{% load static %}
+
+
+<!-- Custom Stylesheet -->
+{% block stylesheet %} 
+    <link rel="stylesheet" href="{% static 'css/restaurant_staff/index.css' %}">
+{% endblock %}
+
+
+
+{% block content %} 
+
+    <div class="container">
+
+        <h1 class="text-center"
+            style="margin: -0.5rem 0 8rem 0;" 
+            id="heading">Restaurant Staff Home Page</h1>
+    
+        <div class="row">
+            <div class="col d-flex justify-content-center align-items-center" id="col-left"
+                onclick="redirect_order_list();">
+                <div class="d-block" id="pizza_delivery">
+                    <img src="{% static 'image/pizza_delivery.png' %}" alt="Pizza Order" id="pizza_delivery_img" /> 
+                    <div class="row bg-warning" id="pizza_delivery_logo_caption">
+                        <div class="col d-flex justify-content-center">
+                            <h4 id="caption1">Pizza Orders</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col d-flex justify-content-center align-items-center" id="col-right"
+                onclick="redirect_pizza_list();">
+                <div class="d-block" id="pizza_list">
+                    <img src="{% static 'image/pizza.png' %}" alt="Pizza" id="pizza_list_img" />
+                    <div class="row bg-warning" id="pizza_list_logo_caption">
+                        <div class="col d-flex justify-content-center">
+                            <h4 id="caption2">Pizza List</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+
+
+<!-- Custom JS -->
+{% block js %} 
+
+    <script>
+        function redirect_order_list() {
+            url = "{% url 'restaurantStaffApplication:restaurantBackendOrderStatus' %}";
+            window.location.href = url;
+        }
+
+        function redirect_pizza_list() {
+            url = "{% url 'restaurantStaffApplication:pizzaRecords' %}";
+            window.location.href = url;
+        }
+    </script>
+
+{% endblock %}
